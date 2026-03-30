@@ -15,7 +15,7 @@ Simulador de esclavo Modbus con soporte TCP y RTU, generación dinámica de valo
 
 Modbus slave simulator with TCP and RTU support, dynamic value generation and custom handlers.
 
-<img width="1372" height="767" alt="image" src="https://github.com/user-attachments/assets/a6730b7a-ad7f-4653-8700-d0fe975d63c4" />
+<img width="1908" height="884" alt="Captura desde 2026-03-29 23-26-49" src="https://github.com/user-attachments/assets/791ceb00-34d9-436a-9234-a6058b912ff0" />
 
 ## Tabla de contenidos / Table of Contents
 

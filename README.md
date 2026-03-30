@@ -13,30 +13,27 @@
 
 Simulador de esclavo Modbus con soporte TCP y RTU, generación dinámica de valores y handlers personalizados.
 
-Modbus slave simulator with TCP and RTU support, dynamic value generation and custom handlers.
-
 <img width="1908" height="884" alt="Captura desde 2026-03-29 23-26-49" src="https://github.com/user-attachments/assets/791ceb00-34d9-436a-9234-a6058b912ff0" />
 
 ## Tabla de contenidos / Table of Contents
 
-- Descripción / Description
-- Features / Características
-- Requisitos / Requirements
-- Instalación / Installation
-- Quickstart / Ejecución rápida
-- Configuración / Configuration
-- Arquitectura / Architecture
-- API / Integration
+- Descripción
+- Características
+- Requisitos
+- Instalación
+- Quickstart
+- Configuración
+- Arquitectura
+- API
 - Tests
-- Troubleshooting / Resolución de problemas
-- Contribuir / Contributing
-- Licencia / License
+- Troubleshooting
+- Maintainer
+- Contribuir
+- Licencia
 
 ## Descripción / Description
 
 Este repositorio contiene un simulador de esclavo Modbus diseñado para pruebas, desarrollo y demostraciones. Implementa servidores Modbus TCP y RTU (si hay puerto serie disponible), mantiene un datastore configurable, genera valores según diferentes modos (static, random, sine, ramp, manual) y añade handlers personalizados para funciones avanzadas.
-
-This repository contains a Modbus slave simulator intended for testing, development and demos. It runs Modbus TCP and RTU (when a serial port is available), maintains a configurable datastore, generates values using multiple modes (static, random, sine, ramp, manual) and registers custom Modbus function handlers.
 
 ## Features / Características
 

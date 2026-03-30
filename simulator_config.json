@@ -1,0 +1,132 @@
+{
+  "simulator": {
+    "tcp_host": "0.0.0.0",
+    "tcp_port": 502,
+    "serial_port": "/tmp/ttyV0",
+    "baudrate": 9600,
+    "data_bits": 8,
+    "stop_bits": 1,
+    "parity": "none",
+    "update_interval_s": 1.0,
+    "device_id": "Modbus Slave Simulator",
+    "vendor_name": "SimLab",
+    "product_code": "SIM-001",
+    "major_minor_revision": "1.0"
+  },
+  "slaves": [
+    {
+      "unit_id": 1,
+      "registers": [
+        {
+          "name": "Temperatura",
+          "modicon_address": 40001,
+          "storage_address": 0,
+          "value_type": 4,
+          "byte_order": "CDAB",
+          "value_mode": "sine",
+          "value": 25.0,
+          "min": 15.0,
+          "max": 45.0,
+          "period_s": 10.0,
+          "unit": "C"
+        },
+        {
+          "name": "Presion",
+          "modicon_address": 40003,
+          "storage_address": 1,
+          "value_type": 0,
+          "byte_order": "AB",
+          "value_mode": "ramp",
+          "value": 700,
+          "min": 500,
+          "max": 1000,
+          "period_s": 10.0,
+          "unit": "hPa"
+        },
+        {
+          "name": "Caudal",
+          "modicon_address": 40004,
+          "storage_address": 2,
+          "value_type": 4,
+          "byte_order": "ABCD",
+          "value_mode": "random",
+          "value": 100.0,
+          "min": 0.0,
+          "max": 500.0,
+          "period_s": 10.0,
+          "unit": "L/h"
+        },
+        {
+          "name": "CorrienteAC",
+          "modicon_address": 40006,
+          "storage_address": 6,
+          "value_type": 0,
+          "byte_order": "AB",
+          "value_mode": "random",
+          "value": 0,
+          "min": -50,
+          "max": 50,
+          "period_s": 10.0,
+          "unit": "A"
+        }
+      ]
+    },
+    {
+      "unit_id": 2,
+      "registers": [
+        {
+          "name": "EstadoBomba",
+          "modicon_address": 1,
+          "storage_address": 3,
+          "value_type": 1,
+          "byte_order": "AB",
+          "value_mode": "static",
+          "value": 1,
+          "min": 0,
+          "max": 1,
+          "period_s": 10.0,
+          "unit": "bool"
+        },
+        {
+          "name": "NivelTanque",
+          "modicon_address": 40001,
+          "storage_address": 4,
+          "value_type": 2,
+          "byte_order": "DCBA",
+          "value_mode": "sine",
+          "value": 1000,
+          "min": 0,
+          "max": 2000,
+          "period_s": 10.0,
+          "unit": "mm"
+        },
+        {
+          "name": "VoltajeDC",
+          "modicon_address": 40003,
+          "storage_address": 5,
+          "value_type": 4,
+          "byte_order": "BADC",
+          "value_mode": "ramp",
+          "value": 11.0,
+          "min": 11.0,
+          "max": 14.8,
+          "period_s": 10.0,
+          "unit": "V"
+        },
+        {
+          "name": "EnergiaTotal",
+          "modicon_address": 40005,
+          "storage_address": 7,
+          "value_type": 3,
+          "byte_order": "CDAB",
+          "value_mode": "ramp",
+          "value": 1000,
+          "min": 0,
+          "max": 100000,
+          "period_s": 10.0,
+          "unit": "Wh"
+        }
+      ]
+    }
+  ]
+}

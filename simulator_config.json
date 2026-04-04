@@ -76,9 +76,9 @@
       "registers": [
         {
           "name": "EstadoBomba",
-          "modicon_address": 1,
+          "modicon_address": 40001,
           "storage_address": 3,
-          "value_type": 1,
+          "value_type": 0,
           "byte_order": "AB",
           "value_mode": "static",
           "value": 1,
@@ -89,9 +89,9 @@
         },
         {
           "name": "NivelTanque",
-          "modicon_address": 40001,
+          "modicon_address": 40002,
           "storage_address": 4,
-          "value_type": 2,
+          "value_type": 4,
           "byte_order": "DCBA",
           "value_mode": "sine",
           "value": 1000,
@@ -102,7 +102,7 @@
         },
         {
           "name": "VoltajeDC",
-          "modicon_address": 40003,
+          "modicon_address": 40004,
           "storage_address": 5,
           "value_type": 4,
           "byte_order": "BADC",
@@ -115,9 +115,9 @@
         },
         {
           "name": "EnergiaTotal",
-          "modicon_address": 40005,
+          "modicon_address": 40006,
           "storage_address": 7,
-          "value_type": 3,
+          "value_type": 4,
           "byte_order": "CDAB",
           "value_mode": "ramp",
           "value": 1000,

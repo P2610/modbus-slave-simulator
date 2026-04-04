@@ -115,34 +115,48 @@ class EncoderDecoder:
 
     @classmethod
     def _bytes_to_registers_32(cls, packed: bytes, byte_order: str) -> list[int]:
-        words = [
-            [packed[0], packed[1]],
-            [packed[2], packed[3]],
+        A, B, C, D = packed[0], packed[1], packed[2], packed[3]
+
+        if byte_order == "ABCD":
+            ordered = [A, B, C, D]
+
+        elif byte_order == "CDAB":
+            ordered = [C, D, A, B]
+
+        elif byte_order == "BADC":
+            ordered = [B, A, D, C]
+
+        elif byte_order == "DCBA":
+            ordered = [D, C, B, A]
+
+        else:
+            raise ValueError(f"Invalid byte_order: {byte_order}")
+
+        return [
+            (ordered[0] << 8) | ordered[1],
+            (ordered[2] << 8) | ordered[3],
         ]
-
-        # Step 1: word order.
-        if byte_order in ("CDAB", "DCBA"):
-            words[0], words[1] = words[1], words[0]
-
-        # Step 2: byte order inside each word.
-        if byte_order in ("BADC", "DCBA"):
-            words = [word[::-1] for word in words]
-
-        return [(word[0] << 8) | word[1] for word in words]
 
     @classmethod
     def _registers_to_bytes_32(cls, regs: list[int], byte_order: str) -> bytes:
-        words = [
-            [(regs[0] >> 8) & 0xFF, regs[0] & 0xFF],
-            [(regs[1] >> 8) & 0xFF, regs[1] & 0xFF],
-        ]
+        A = (regs[0] >> 8) & 0xFF
+        B = regs[0] & 0xFF
+        C = (regs[1] >> 8) & 0xFF
+        D = regs[1] & 0xFF
 
-        # Inverse step 2: byte order inside each word.
-        if byte_order in ("BADC", "DCBA"):
-            words = [word[::-1] for word in words]
+        if byte_order == "ABCD":
+            ordered = [A, B, C, D]
 
-        # Inverse step 1: word order.
-        if byte_order in ("CDAB", "DCBA"):
-            words[0], words[1] = words[1], words[0]
+        elif byte_order == "CDAB":
+            ordered = [C, D, A, B]
 
-        return bytes([words[0][0], words[0][1], words[1][0], words[1][1]])
+        elif byte_order == "BADC":
+            ordered = [B, A, D, C]
+
+        elif byte_order == "DCBA":
+            ordered = [D, C, B, A]
+
+        else:
+            raise ValueError(f"Invalid byte_order: {byte_order}")
+
+        return bytes(ordered)

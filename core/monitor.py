@@ -9,11 +9,13 @@ from .datastore import SimulationState
 
 try:
     from rich.console import Console, Group
+    from rich.live import Live
     from rich.panel import Panel
     from rich.table import Table
 except Exception:  # pragma: no cover - fallback path if rich is unavailable
     Console = None  # type: ignore[assignment]
     Group = None  # type: ignore[assignment]
+    Live = None  # type: ignore[assignment]
     Panel = None  # type: ignore[assignment]
     Table = None  # type: ignore[assignment]
 
@@ -92,32 +94,71 @@ class RichMonitor:
     """Rich dashboard monitor with 3 sections required by the project spec."""
 
     def __init__(self, state: SimulationState) -> None:
-        if Console is None:
+        if Console is None or Live is None:
             raise RuntimeError("rich is not available")
         self.state = state
         self.console = Console()
-        self._lock = threading.Lock()
+        self._lifecycle_lock = threading.Lock()
+        self._stop_event = threading.Event()
+        self._render_thread: threading.Thread | None = None
+        self._render_interval_s = max(0.1, float(self.state.metadata.update_interval_s))
 
     def start(self) -> None:
         # Enter alternate screen buffer to avoid polluting terminal scrollback.
+        with self._lifecycle_lock:
+            if self._render_thread is not None and self._render_thread.is_alive():
+                return
+            self._stop_event.clear()
         try:
             print("\033[?1049h", end="", flush=True)
         except BrokenPipeError:
             pass
-        self.console.print("[bold green]Monitor activo[/bold green]")
+        with self._lifecycle_lock:
+            self._render_thread = threading.Thread(
+                target=self._run_live_loop,
+                daemon=True,
+                name="rich-monitor",
+            )
+            self._render_thread.start()
 
     def refresh(self) -> None:
-        with self._lock:
-            self.console.clear()
-            self.console.print(self._build_dashboard())
+        # Rich monitor updates in its own loop using state.metadata.update_interval_s.
+        return
 
     def stop(self) -> None:
+        with self._lifecycle_lock:
+            self._stop_event.set()
+            render_thread = self._render_thread
+
+        if render_thread is not None:
+            render_thread.join(timeout=max(2.0, self._render_interval_s * 2))
+
+        with self._lifecycle_lock:
+            self._render_thread = None
+
         # Exit alternate screen buffer and show stop message in main buffer.
         try:
             print("\033[?1049l", end="", flush=True)
         except BrokenPipeError:
             pass
         self.console.print("[bold yellow]Monitor detenido[/bold yellow]")
+
+    def _run_live_loop(self) -> None:
+        refresh_per_second = max(1.0, 1.0 / self._render_interval_s)
+        try:
+            with Live(
+                self._build_dashboard(),
+                console=self.console,
+                refresh_per_second=refresh_per_second,
+                transient=False,
+            ) as live:
+                while not self._stop_event.wait(self._render_interval_s):
+                    live.update(self._build_dashboard(), refresh=True)
+        except BrokenPipeError:
+            return
+        except Exception:
+            # Keep simulator runtime alive even if monitor rendering fails.
+            return
 
     def _build_dashboard(self):
         sensors_panel = Panel(self._build_sensor_table(), title="Panel 1 - Sensores", border_style="cyan")
@@ -196,6 +237,6 @@ def build_monitor(state: SimulationState, no_monitor: bool) -> Monitor:
     """Create monitor implementation based on runtime mode and installed deps."""
     if no_monitor:
         return NullMonitor()
-    if Console is None:
+    if Console is None or Live is None:
         return PlainMonitor(state)
     return RichMonitor(state)
